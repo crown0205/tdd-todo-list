@@ -32,7 +32,12 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">할 일 목록</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          할 일 목록{' '}
+          <span className="text-sm text-gray-500" data-testid="todo-count">
+            ({todos.length})
+          </span>
+        </h1>
 
         {/* 입력 폼 */}
         <form
