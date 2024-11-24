@@ -116,4 +116,25 @@ describe('# 할일 완료', () => {
     );
   });
 });
+
+describe('# 할일 삭제', () => {
+  beforeEach(() => {
+    render(<App />);
+  });
+
+  test('- 삭제 버튼 클릭시 목록에서 삭제되어야 한다', () => {
+    const input = screen.getByTestId('input-input');
+    fireEvent.change(input, { target: { value: '할일 1' } });
+
+    const button = screen.getByTestId('add-button');
+    if (!button.hasAttribute('disabled')) {
+      fireEvent.click(button);
+    }
+
+    const deleteButton = screen.getByTestId('delete-button');
+    fireEvent.click(deleteButton);
+
+    expect(screen.queryByText('할일 1')).not.toBeInTheDocument();
+    expect(screen.getAllByTestId('todo-item').length).toBe(0);
+  });
 });

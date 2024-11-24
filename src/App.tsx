@@ -25,6 +25,10 @@ function App() {
     );
   };
 
+  const handleDeleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
@@ -34,7 +38,7 @@ function App() {
         <form
           className="flex gap-2 mb-6"
           data-testid="input-form"
-          aria-label="inpu-form"
+          aria-label="input-form"
           onSubmit={e => {
             e.preventDefault();
             handleAddTodo();
@@ -63,7 +67,7 @@ function App() {
           {todos.map(todo => (
             <div
               key={todo.id}
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
               data-testid="todo-item"
             >
               <input
@@ -80,7 +84,11 @@ function App() {
               >
                 {todo.content}
               </span>
-              <button className="text-red-500 hover:text-red-600">
+              <button
+                className="text-red-500 hover:text-red-600"
+                data-testid="delete-button"
+                onClick={() => handleDeleteTodo(todo.id)}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
