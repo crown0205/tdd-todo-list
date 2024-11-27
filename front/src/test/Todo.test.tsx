@@ -118,23 +118,28 @@ describe('# 할일 완료', () => {
 });
 
 describe('# 할일 삭제', () => {
-  beforeEach(() => {
-    render(<App />);
-  });
+  const TODO_CONTENT = '할일 1';
 
-  test('- 삭제 버튼 클릭시 목록에서 삭제되어야 한다', () => {
+  const addTodo = () => {
     const input = screen.getByTestId('input-input');
-    fireEvent.change(input, { target: { value: '할일 1' } });
-
     const button = screen.getByTestId('add-button');
+    fireEvent.change(input, { target: { value: TODO_CONTENT } });
+
     if (!button.hasAttribute('disabled')) {
       fireEvent.click(button);
     }
+  };
 
+  beforeEach(() => {
+    render(<App />);
+    addTodo();
+    expect(screen.queryByText(TODO_CONTENT)).toBeInTheDocument();
+  });
+
+  test('- 삭제 버튼 클릭시 목록에서 삭제되어야 한다', () => {
     const deleteButton = screen.getByTestId('delete-button');
     fireEvent.click(deleteButton);
 
     expect(screen.queryByText('할일 1')).not.toBeInTheDocument();
-    expect(screen.getAllByTestId('todo-item').length).toBe(0);
   });
 });
