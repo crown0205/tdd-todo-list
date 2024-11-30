@@ -22,20 +22,22 @@ const createTodo = async (createTodoDto: CreateTodo): Promise<Todo> => {
   return response.data;
 };
 
-// 할일 삭제
-const removeTodo = async (id: number): Promise<void> => {
-  await axiosInstance.delete(`${BASE_URL}/${id}`);
-};
-
 // 할일 완료 상태 토글
 const toggleTodoComplete = async (id: number): Promise<Todo> => {
   const response = await axiosInstance.patch<Todo>(`${BASE_URL}/${id}/toggle`);
   return response.data;
 };
 
+// 할일 삭제
+const removeTodo = async (id: number): Promise<void> => {
+  const response = await axiosInstance.delete(`${BASE_URL}/${id}`);
+  return response.data;
+};
+
 // 완료된 할일 모두 삭제
 const removeCompletedTodos = async (): Promise<void> => {
-  await axiosInstance.delete(`${BASE_URL}/completed`);
+  const response = await axiosInstance.delete(`${BASE_URL}/completed`);
+  return response.data;
 };
 
 const todoApi = {
