@@ -1,32 +1,35 @@
 import { useState } from 'react';
-
-type Todo = {
-  id: number;
-  content: string;
-  isDone: boolean;
-};
+import useGetTodo from './hooks/queries/useGetTodo';
 
 function App() {
-  const [content, setContent] = useState('');
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [title, setTitle] = useState('');
+  const { data: todos = [] } = useGetTodo();
 
   const handleAddTodo = () => {
-    if (content.trim() === '') return;
+    if (title.trim() === '') return;
 
-    setTodos([...todos, { id: todos.length + 1, content, isDone: false }]);
-    setContent('');
+    // setTodos([
+    //   ...todos,
+    //   {
+    //     id: todos.length + 1,
+    //     title,
+    //     isCompleted: false,
+    //     createdAt: new Date(),
+    //   },
+    // ]);
+    setTitle('');
   };
 
   const handleToggleTodo = (id: number) => {
-    setTodos(
-      todos.map(todo =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo,
-      ),
-    );
+    // setTodos(
+    // todos.map(todo =>
+    // todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo,
+    // ),
+    // );
   };
 
   const handleDeleteTodo = (id: number) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    // setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
@@ -54,13 +57,13 @@ function App() {
             placeholder="할 일을 입력하세요"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             data-testid="input-input"
-            value={content}
-            onChange={e => setContent(e.target.value)}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
           />
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
             data-testid="add-button"
-            disabled={content.trim() === ''}
+            disabled={title.trim() === ''}
             type="submit"
           >
             추가
@@ -78,16 +81,16 @@ function App() {
               <input
                 type="checkbox"
                 className="w-5 h-5"
-                checked={todo.isDone}
+                checked={todo.isCompleted}
                 onChange={() => handleToggleTodo(todo.id)}
                 data-testid="todo-checkbox"
               />
               <span
                 className={`flex-1 ${
-                  todo.isDone ? 'line-through text-gray-500' : ''
+                  todo.isCompleted ? 'line-through text-gray-500' : ''
                 }`}
               >
-                {todo.content}
+                {todo.title}
               </span>
               <button
                 className="text-red-500 hover:text-red-600"
