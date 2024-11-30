@@ -7,11 +7,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'log'],
   });
+  const configService = app.get(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors({
+    origin: configService.get('CORS_ORIGIN'),
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
-  const configService = app.get(ConfigService);
-  const port = configService.get('PORT') || 3000;
+  const port = configService.get('PORT') || 3001;
 
   await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
