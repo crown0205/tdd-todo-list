@@ -1,4 +1,4 @@
-import { CreateTodo, Todo } from '../types/todo';
+import { Todo } from '../types/todo';
 import axiosInstance from './axios';
 
 const BASE_URL = '/todos';
@@ -17,8 +17,8 @@ const findOneTodo = async (id: number): Promise<Todo> => {
 };
 
 // 할일 생성
-const createTodo = async (createTodoDto: CreateTodo): Promise<Todo> => {
-  const response = await axiosInstance.post<Todo>(BASE_URL, createTodoDto);
+const createTodo = async (title: string): Promise<Todo> => {
+  const response = await axiosInstance.post<Todo>(BASE_URL, { title });
   return response.data;
 };
 

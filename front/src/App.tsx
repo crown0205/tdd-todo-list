@@ -1,22 +1,16 @@
 import { useState } from 'react';
 import useGetTodo from './hooks/queries/useGetTodo';
+import useMutateCreateTodo from './hooks/queries/useMutateCreateTodo';
 
 function App() {
   const [title, setTitle] = useState('');
   const { data: todos = [] } = useGetTodo();
+  const { mutate: createTodo } = useMutateCreateTodo();
 
   const handleAddTodo = () => {
     if (title.trim() === '') return;
 
-    // setTodos([
-    //   ...todos,
-    //   {
-    //     id: todos.length + 1,
-    //     title,
-    //     isCompleted: false,
-    //     createdAt: new Date(),
-    //   },
-    // ]);
+    createTodo(title);
     setTitle('');
   };
 

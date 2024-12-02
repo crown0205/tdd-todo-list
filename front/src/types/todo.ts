@@ -4,8 +4,4 @@ interface Todo {
   isCompleted: boolean;
 }
 
-interface CreateTodo {
-  title: string;
-}
-
-export type { Todo, CreateTodo };
+export type { Todo };

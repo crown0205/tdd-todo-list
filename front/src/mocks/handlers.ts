@@ -14,12 +14,19 @@ let mockTodos: Todo[] = [
   },
 ];
 
-const BASE_URL = 'http://localhost:3001/todos';
+const BASE_URL = 'http://localhost:3002/todos';
 
 export const handlers = [
   // 모든 할일 조회
   http.get(BASE_URL, () => {
     return HttpResponse.json(mockTodos);
+  }),
+
+  // 특정 할일 조회
+  http.get(`${BASE_URL}/:id`, ({ params }) => {
+    const { id } = params;
+    const todo = mockTodos.find(todo => todo.id === Number(id));
+    return HttpResponse.json(todo);
   }),
 
   // 할일 생성
