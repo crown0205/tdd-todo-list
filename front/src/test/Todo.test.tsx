@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent,
   render,
@@ -7,8 +8,7 @@ import {
 } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import App from '../App';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import useGetTodo from '../hooks/queries/useGetTodo';
+import useGetTodos from '../hooks/queries/useGetTodos';
 
 let queryClient: QueryClient;
 
@@ -31,7 +31,7 @@ describe('# 랜더링', () => {
   });
 
   test('- 화면에 표시되는 요소들', async () => {
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
@@ -74,7 +74,7 @@ describe('# 할일 추가', () => {
       fireEvent.click(button);
     }
 
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => {
       expect(screen.getAllByTestId('todo-item').length).toBe(3);
@@ -100,7 +100,7 @@ describe('# 할일 추가', () => {
       fireEvent.submit(form);
     }
 
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
@@ -120,7 +120,7 @@ describe('# 할일 추가', () => {
     fireEvent.change(input, { target: { value: '할일 1' } });
     fireEvent.click(button);
 
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.data?.length).toBe(3);

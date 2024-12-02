@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, test } from 'vitest';
-import useGetTodo from '../../hooks/queries/useGetTodo';
+import useGetTodos from '../../hooks/queries/useGetTodos';
 import { server } from '../../mocks/server';
 
 // 테스트용 QueryClient 생성 함수
@@ -23,7 +23,7 @@ describe('useGetTodo', () => {
     );
 
     // useGetTodo 훅 실행
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     // 초기 로딩 상태 확인
     expect(result.current.isLoading).toBe(true);
@@ -61,7 +61,7 @@ describe('useGetTodo', () => {
     );
 
     // useGetTodo 훅 실행
-    const { result } = renderHook(() => useGetTodo(), { wrapper });
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
 
     // 로딩 상태 확인
     expect(result.current.isLoading).toBe(true);
@@ -81,7 +81,9 @@ describe('useGetTodo', () => {
     );
 
     // useGetTodo 훅 첫 번째 실행
-    const { result: firstResult } = renderHook(() => useGetTodo(), { wrapper });
+    const { result: firstResult } = renderHook(() => useGetTodos(), {
+      wrapper,
+    });
 
     expect(firstResult.current.isLoading).toBe(true);
 
@@ -95,7 +97,7 @@ describe('useGetTodo', () => {
     });
 
     // useGetTodo 훅 두 번째 실행
-    const { result: secondResult } = renderHook(() => useGetTodo(), {
+    const { result: secondResult } = renderHook(() => useGetTodos(), {
       wrapper,
     });
 
