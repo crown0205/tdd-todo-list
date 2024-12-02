@@ -23,6 +23,8 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
         className={`flex-1 ${
           todo.isCompleted ? 'line-through text-gray-500' : ''
         }`}
+        data-testid="todo-title"
+        onClick={() => onToggle(todo.id)}
       >
         {todo.title}
       </span>

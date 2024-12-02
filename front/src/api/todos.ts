@@ -36,8 +36,7 @@ const removeTodo = async (id: number): Promise<void> => {
 
 // 완료된 할일 모두 삭제
 const removeCompletedTodos = async (): Promise<void> => {
-  const response = await axiosInstance.delete(`${BASE_URL}/completed`);
-  return response.data;
+  await axiosInstance.delete(`${BASE_URL}/completed`);
 };
 
 const todoApi = {

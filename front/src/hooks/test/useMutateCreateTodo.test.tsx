@@ -3,8 +3,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, test } from 'vitest';
 import { server } from '../../mocks/server';
-import useGetTodo from './useGetTodo';
-import useMutateCreateTodo from './useMutateCreateTodo';
+import useGetTodos from '../queries/useGetTodos';
+import useMutateCreateTodo from '../queries/useMutateCreateTodo';
 
 const queryClient = new QueryClient();
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useMutateCreateTodo', () => {
   test('할일 생성 성공 시 쿼리 무효화', async () => {
-    const { result: getResult } = renderHook(() => useGetTodo(), { wrapper });
+    const { result: getResult } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => expect(getResult.current.isSuccess).toBe(true));
     expect(getResult.current.data).toHaveLength(2);

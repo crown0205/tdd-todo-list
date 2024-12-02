@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import todoApi from '../../api/todos';
 
-function useGetTodo(id: number) {
+function useGetTodo() {
   return useQuery({
-    queryKey: ['todos', id],
-    queryFn: () => todoApi.findOneTodo(id),
+    queryKey: ['todos'],
+    queryFn: () => todoApi.findAllTodos(),
   });
 }
 

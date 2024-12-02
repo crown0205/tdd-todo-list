@@ -14,9 +14,15 @@ let mockTodos: Todo[] = [
   },
 ];
 
-const BASE_URL = 'http://localhost:3002/todos';
+const BASE_URL = 'http://localhost:3001/todos';
 
 export const handlers = [
+  // 모든 완료된 할일 삭제
+  http.delete(`${BASE_URL}/completed`, () => {
+    mockTodos = mockTodos.filter(todo => !todo.isCompleted);
+    return HttpResponse.json({ message: 'Completed todos deleted' });
+  }),
+
   // 모든 할일 조회
   http.get(BASE_URL, () => {
     return HttpResponse.json(mockTodos);
@@ -57,11 +63,5 @@ export const handlers = [
     const { id } = params;
     mockTodos = mockTodos.filter(todo => todo.id !== Number(id));
     return HttpResponse.json({ message: 'Todo deleted', mockTodos });
-  }),
-
-  // 모든 완료된 할일 삭제
-  http.delete(`${BASE_URL}/completed`, () => {
-    mockTodos = mockTodos.filter(todo => !todo.isCompleted);
-    return HttpResponse.json({ message: 'Completed todos deleted' });
   }),
 ];
