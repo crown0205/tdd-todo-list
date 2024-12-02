@@ -1,29 +1,18 @@
-import { useState } from 'react';
+import TodoForm from './components/TodoForm';
+import TodoItem from './components/TodoItem';
 import useGetTodo from './hooks/queries/useGetTodo';
 import useMutateCreateTodo from './hooks/queries/useMutateCreateTodo';
 
 function App() {
-  const [title, setTitle] = useState('');
   const { data: todos = [] } = useGetTodo();
   const { mutate: createTodo } = useMutateCreateTodo();
 
-  const handleAddTodo = () => {
-    if (title.trim() === '') return;
-
-    createTodo(title);
-    setTitle('');
-  };
-
   const handleToggleTodo = (id: number) => {
-    // setTodos(
-    // todos.map(todo =>
-    // todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo,
-    // ),
-    // );
+    // TODO: Implement toggle functionality
   };
 
   const handleDeleteTodo = (id: number) => {
-    // setTodos(todos.filter(todo => todo.id !== id));
+    // TODO: Implement delete functionality
   };
 
   return (
@@ -36,75 +25,16 @@ function App() {
           </span>
         </h1>
 
-        {/* 입력 폼 */}
-        <form
-          className="flex gap-2 mb-6"
-          data-testid="input-form"
-          aria-label="input-form"
-          onSubmit={e => {
-            e.preventDefault();
-            handleAddTodo();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="할 일을 입력하세요"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            data-testid="input-input"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-          />
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
-            data-testid="add-button"
-            disabled={title.trim() === ''}
-            type="submit"
-          >
-            추가
-          </button>
-        </form>
+        <TodoForm onSubmit={createTodo} />
 
-        {/* 할 일 목록 */}
         <ul className="space-y-3" data-testid="todo-list">
           {todos.map(todo => (
-            <div
+            <TodoItem
               key={todo.id}
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
-              data-testid="todo-item"
-            >
-              <input
-                type="checkbox"
-                className="w-5 h-5"
-                checked={todo.isCompleted}
-                onChange={() => handleToggleTodo(todo.id)}
-                data-testid="todo-checkbox"
-              />
-              <span
-                className={`flex-1 ${
-                  todo.isCompleted ? 'line-through text-gray-500' : ''
-                }`}
-              >
-                {todo.title}
-              </span>
-              <button
-                className="text-red-500 hover:text-red-600"
-                data-testid="delete-button"
-                onClick={() => handleDeleteTodo(todo.id)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
+              todo={todo}
+              onToggle={handleToggleTodo}
+              onDelete={handleDeleteTodo}
+            />
           ))}
         </ul>
       </div>
