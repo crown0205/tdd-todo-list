@@ -9,5 +9,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    mockReset: true,
+    deps: {
+      inline: ['msw'],
+    },
   },
 });
