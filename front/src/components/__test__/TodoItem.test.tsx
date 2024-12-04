@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import TodoItem from '../TodoItem/index';
-import { Todo } from '../../types/todo';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { Todo } from '../../types/todo';
+import TodoItem from '../TodoItem/index';
 
 describe('TodoItem', () => {
   const mockTodo: Todo = {
@@ -30,6 +30,17 @@ describe('TodoItem', () => {
     expect(screen.getByTestId('todo-item')).toBeInTheDocument();
     expect(screen.getByTestId('todo-title')).toHaveTextContent('테스트 할일');
     expect(screen.getByTestId('todo-checkbox')).not.toBeChecked();
+  });
+
+  test('TodoItem 스냅샷이 일치해야 합니다', () => {
+    const { container } = render(
+      <TodoItem
+        todo={mockTodo}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+      />,
+    );
+    expect(container).toMatchSnapshot();
   });
 
   test('완료된 할일은 체크박스가 체크되어 있어야 합니다', () => {
@@ -71,5 +82,23 @@ describe('TodoItem', () => {
 
     fireEvent.click(screen.getByTestId('delete-button'));
     expect(mockOnDelete).toHaveBeenCalledWith(mockTodo.id);
+  });
+
+  test('키보드로 할일을 완료/삭제할 수 있어야 합니다', () => {
+    render(
+      <TodoItem
+        todo={mockTodo}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+      />,
+    );
+
+    const checkbox = screen.getByTestId('todo-checkbox');
+    fireEvent.keyDown(checkbox, { key: 'Enter', code: 'Enter' });
+    expect(mockOnToggle).toHaveBeenCalled();
+
+    const deleteButton = screen.getByTestId('delete-button');
+    fireEvent.keyDown(deleteButton, { key: 'Enter', code: 'Enter' });
+    expect(mockOnDelete).toHaveBeenCalled();
   });
 });
