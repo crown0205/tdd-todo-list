@@ -1,9 +1,7 @@
-import { UseMutateAsyncFunction } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Todo } from '../../types/todo';
 
 interface TodoFormProps {
-  onSubmit: UseMutateAsyncFunction<Todo, unknown, string, void>;
+  onSubmit: (title: string) => void;
 }
 
 export default function TodoForm({ onSubmit }: TodoFormProps) {
