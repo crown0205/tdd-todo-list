@@ -1,8 +1,6 @@
 import '@testing-library/jest-dom';
 import { afterAll, afterEach, beforeAll } from 'vitest';
 import { server } from '../mocks/server';
-import { userEvent } from '@testing-library/user-event';
-import { render } from '@testing-library/react';
 
 // 테스트 전체 시작 전 한번 실행
 // => 처리되지 않은 요청에 대해 에러 발생
@@ -11,10 +9,3 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => server.resetHandlers());
 // 테스트 전체 종료 후 한번 실행
 afterAll(() => server.close());
-
-const setupTest = (element: React.ReactElement) => {
-  const user = userEvent.setup();
-  return { user, ...render(element) };
-};
-
-export { setupTest };

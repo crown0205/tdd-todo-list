@@ -17,11 +17,18 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
         className="w-5 h-5"
         checked={todo.isCompleted}
         onChange={() => onToggle(todo.id)}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            onToggle(todo.id);
+          }
+        }}
         data-testid="todo-checkbox"
       />
       <span
         className={`flex-1 ${
-          todo.isCompleted ? 'line-through text-gray-500' : ''
+          todo.isCompleted
+            ? 'transition-all duration-500 ease-in-out line-through text-gray-500'
+            : ''
         }`}
         data-testid="todo-title"
         onClick={() => onToggle(todo.id)}
@@ -33,6 +40,11 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
         className="text-red-500 hover:text-red-600"
         data-testid="delete-button"
         onClick={() => onDelete(todo.id)}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            onDelete(todo.id);
+          }
+        }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

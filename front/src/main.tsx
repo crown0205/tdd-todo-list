@@ -5,7 +5,6 @@ import App from './App.tsx';
 import './index.css';
 
 async function enableMocking() {
-  console.log(import.meta.env.VITE_TEST);
   if (import.meta.env.VITE_MODE !== 'development') {
     return;
   }

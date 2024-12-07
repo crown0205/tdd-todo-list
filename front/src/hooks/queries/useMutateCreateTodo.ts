@@ -6,8 +6,8 @@ function useMutateCreateTodo() {
 
   return useMutation({
     mutationFn: (title: string) => todoApi.createTodo(title),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
 }
