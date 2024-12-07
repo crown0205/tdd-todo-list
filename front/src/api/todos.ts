@@ -3,6 +3,11 @@ import axiosInstance from './axios';
 
 const BASE_URL = '/todos';
 
+const handleApiError = (error: unknown, operation: string) => {
+  console.error(`Failed to ${operation}:`, error);
+  throw error;
+};
+
 // 모든 할일 조회
 const findAllTodos = async (isCompleted?: boolean): Promise<Todo[]> => {
   const params = isCompleted !== undefined ? { isCompleted } : {};
@@ -11,15 +16,18 @@ const findAllTodos = async (isCompleted?: boolean): Promise<Todo[]> => {
     const response = await axiosInstance.get<Todo[]>(BASE_URL, { params });
     return response.data;
   } catch (error) {
-    console.error('Error fetching todos: ✅', error);
-    throw error;
+    return handleApiError(error, 'fetching todos');
   }
 };
 
 // 특정 할일 조회
 const findOneTodo = async (id: number): Promise<Todo> => {
-  const response = await axiosInstance.get<Todo>(`${BASE_URL}/${id}`);
-  return response.data;
+  try {
+    const response = await axiosInstance.get<Todo>(`${BASE_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error, `fetching todo with id ${id}`);
+  }
 };
 
 // 할일 생성
