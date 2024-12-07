@@ -58,9 +58,23 @@ describe('useGetTodos', () => {
   });
 
   test('캐시 활용 시 재호출이 발생하지 않아야 한다', async () => {
-    const { result } = renderHook(() => useGetTodos(), { wrapper });
+    let requestCount = 0;
+    server.use(
+      http.get(`${BASE_URL}/todos`, () => {
+        requestCount++;
+        return HttpResponse.json(MOCK_TODOS);
+      }),
+    );
+
+    const { result, rerender } = renderHook(() => useGetTodos(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(requestCount).toBe(1);
+
+    // 컴포넌트 재렌더링
+    rerender();
+
+    expect(requestCount).toBe(1);
     expect(result.current.data).toEqual(MOCK_TODOS);
   });
 });
