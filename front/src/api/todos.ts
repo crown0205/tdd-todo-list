@@ -9,24 +9,26 @@ const handleApiError = (error: unknown, operation: string) => {
 };
 
 // 모든 할일 조회
-const findAllTodos = async (isCompleted?: boolean): Promise<Todo[]> => {
+const findAllTodos = async (
+  isCompleted?: boolean,
+): Promise<Todo[] | undefined> => {
   const params = isCompleted !== undefined ? { isCompleted } : {};
 
   try {
     const response = await axiosInstance.get<Todo[]>(BASE_URL, { params });
     return response.data;
   } catch (error) {
-    return handleApiError(error, 'fetching todos');
+    handleApiError(error, 'fetching todos');
   }
 };
 
 // 특정 할일 조회
-const findOneTodo = async (id: number): Promise<Todo> => {
+const findOneTodo = async (id: number): Promise<Todo | undefined> => {
   try {
     const response = await axiosInstance.get<Todo>(`${BASE_URL}/${id}`);
     return response.data;
   } catch (error) {
-    return handleApiError(error, `fetching todo with id ${id}`);
+    handleApiError(error, `fetching todo with id ${id}`);
   }
 };
 
