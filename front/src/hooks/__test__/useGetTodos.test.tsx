@@ -25,6 +25,11 @@ export const wrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 describe('useGetTodos', () => {
+  test('처음에는 로딩 상태여야 합니다', () => {
+    const { result } = renderHook(() => useGetTodos(), { wrapper });
+    expect(result.current.isLoading).toBe(true);
+  });
+
   test('데이터 조회 성공', async () => {
     const { result } = renderHook(() => useGetTodos(), { wrapper });
 
