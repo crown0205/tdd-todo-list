@@ -29,8 +29,13 @@ const findOneTodo = async (id: number): Promise<Todo> => {
 
 // 할일 생성
 const createTodo = async (title: string): Promise<Todo> => {
-  const response = await axiosInstance.post<Todo>(BASE_URL, { title });
-  return response.data;
+  try {
+    const response = await axiosInstance.post<Todo>(BASE_URL, { title });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to creating todo:`, error);
+    throw error;
+  }
 };
 
 // 할일 완료 상태 토글
@@ -48,13 +53,22 @@ const toggleTodoComplete = async (id: number): Promise<Todo> => {
 
 // 할일 삭제
 const removeTodo = async (id: number): Promise<void> => {
-  const response = await axiosInstance.delete(`${BASE_URL}/${id}`);
-  return response.data;
+  try {
+    await axiosInstance.delete(`${BASE_URL}/${id}`);
+  } catch (error) {
+    console.error(`Failed to deleting todo with id ${id}:`, error);
+    throw error;
+  }
 };
 
 // 완료된 할일 모두 삭제
 const removeCompletedTodos = async (): Promise<void> => {
-  await axiosInstance.delete(`${BASE_URL}/completed`);
+  try {
+    await axiosInstance.delete(`${BASE_URL}/completed`);
+  } catch (error) {
+    console.error(`Failed to deleting completed todos:`, error);
+    throw error;
+  }
 };
 
 const todoApi = {
