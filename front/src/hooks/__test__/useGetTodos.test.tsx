@@ -6,12 +6,12 @@ import { BASE_URL } from '../../api/axios';
 import { server } from '../../mocks/server';
 import useGetTodos from '../queries/useGetTodos';
 
-export const MOCK_TODOS = [
+const MOCK_TODOS = [
   { id: 1, title: '리액트 공부하기', isCompleted: false },
   { id: 2, title: 'TDD 연습하기', isCompleted: false },
 ];
 
-export const wrapper = ({ children }: { children: React.ReactNode }) => {
+const wrapper = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
