@@ -5,9 +5,9 @@ function useMutateToggleTodo() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: todoApi.toggleTodoComplete,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    mutationFn: (id: number) => todoApi.toggleTodoComplete(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
 }
