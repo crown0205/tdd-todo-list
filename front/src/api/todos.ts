@@ -28,10 +28,9 @@ const findOneTodo = async (id: number): Promise<Todo> => {
 };
 
 // 할일 생성
-const createTodo = async (title: string): Promise<Todo> => {
+const createTodo = async (title: string): Promise<void> => {
   try {
-    const response = await axiosInstance.post<Todo>(BASE_URL, { title });
-    return response.data;
+    await axiosInstance.post<Todo>(BASE_URL, { title });
   } catch (error) {
     console.error(`Failed to creating todo:`, error);
     throw error;

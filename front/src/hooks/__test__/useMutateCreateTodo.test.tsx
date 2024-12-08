@@ -3,7 +3,12 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import todoApi from '../../api/todos';
 import useMutateCreateTodo from '../queries/useMutateCreateTodo';
-import { MOCK_TODOS } from './useGetTodos.test';
+import useGetTodos from '../queries/useGetTodos';
+
+const MOCK_TODOS = [
+  { id: 1, title: '리액트 공부하기', isCompleted: false },
+  { id: 2, title: 'TDD 연습하기', isCompleted: false },
+];
 
 // API 함수 목킹
 vi.mock('../../api/todos', () => ({
@@ -27,46 +32,51 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useMutateCreateTodo', () => {
   beforeEach(async () => {
-    vi.clearAllMocks();
-    queryClient.clear();
-
-    // 초기 데이터 설정
-    await queryClient.setQueryData(['todos'], MOCK_TODOS);
-
-    // findAllTodos 목 구현
-    (todoApi.findAllTodos as ReturnType<typeof vi.fn>).mockResolvedValue(
-      MOCK_TODOS,
-    );
+    queryClient.setQueryData(['todos'], MOCK_TODOS);
   });
 
   test('할일 생성시 쿼리 무효화', async () => {
-    const newTodo = { id: 3, title: 'Test Todo', isCompleted: false };
-    // createTodo 목 구현
-    (todoApi.createTodo as ReturnType<typeof vi.fn>).mockResolvedValue(newTodo);
+    const newTodo = {
+      id: 3,
+      title: '새로운 할일',
+      isCompleted: false,
+    };
 
-    const { result } = renderHook(() => useMutateCreateTodo(), {
+    (todoApi.createTodo as ReturnType<typeof vi.fn>).mockResolvedValue(
+      undefined,
+    );
+
+    const { result } = renderHook(() => useMutateCreateTodo(), { wrapper });
+
+    await act(async () => {
+      result.current.mutate('새로운 할일');
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(todoApi.createTodo).toHaveBeenCalledWith('새로운 할일');
+
+    await queryClient.invalidateQueries({ queryKey: ['todos'] });
+
+    (todoApi.findAllTodos as ReturnType<typeof vi.fn>).mockResolvedValue([
+      ...MOCK_TODOS,
+      newTodo,
+    ]);
+
+    const { result: queryResult } = renderHook(() => useGetTodos(), {
       wrapper,
     });
 
-    await act(async () => {
-      result.current.mutate('Test Todo');
-    });
-
     await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
+      expect(queryResult.current.data).toEqual([...MOCK_TODOS, newTodo]);
     });
-
-    expect(todoApi.createTodo).toHaveBeenCalledWith('Test Todo');
-    expect(await queryClient.getQueryData(['todos'])).toHaveLength(3);
   });
 
   test('할일 생성 실패시 에러 처리', async () => {
     const error = new Error('Failed to create todo');
     (todoApi.createTodo as ReturnType<typeof vi.fn>).mockRejectedValue(error);
 
-    const { result } = renderHook(() => useMutateCreateTodo(), {
-      wrapper,
-    });
+    const { result } = renderHook(() => useMutateCreateTodo(), { wrapper });
 
     await act(async () => {
       result.current.mutate('Test Todo');
@@ -74,7 +84,7 @@ describe('useMutateCreateTodo', () => {
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
-      expect(result.current.error).toBe(error);
+      expect(result.current.error?.message).toBe('Failed to create todo');
     });
 
     expect(todoApi.createTodo).toHaveBeenCalledWith('Test Todo');
