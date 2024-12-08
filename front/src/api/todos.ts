@@ -3,32 +3,27 @@ import axiosInstance from './axios';
 
 const BASE_URL = '/todos';
 
-const handleApiError = (error: unknown, operation: string) => {
-  console.error(`Failed to ${operation}:`, error);
-  throw error;
-};
-
 // 모든 할일 조회
-const findAllTodos = async (
-  isCompleted?: boolean,
-): Promise<Todo[] | undefined> => {
+const findAllTodos = async (isCompleted?: boolean): Promise<Todo[]> => {
   const params = isCompleted !== undefined ? { isCompleted } : {};
 
   try {
     const response = await axiosInstance.get<Todo[]>(BASE_URL, { params });
     return response.data;
   } catch (error) {
-    handleApiError(error, 'fetching todos');
+    console.error(`Failed to fetching todos:`, error);
+    throw error;
   }
 };
 
 // 특정 할일 조회
-const findOneTodo = async (id: number): Promise<Todo | undefined> => {
+const findOneTodo = async (id: number): Promise<Todo> => {
   try {
     const response = await axiosInstance.get<Todo>(`${BASE_URL}/${id}`);
     return response.data;
   } catch (error) {
-    handleApiError(error, `fetching todo with id ${id}`);
+    console.error(`Failed to fetching todo with id ${id}:`, error);
+    throw error;
   }
 };
 
@@ -40,8 +35,15 @@ const createTodo = async (title: string): Promise<Todo> => {
 
 // 할일 완료 상태 토글
 const toggleTodoComplete = async (id: number): Promise<Todo> => {
-  const response = await axiosInstance.patch<Todo>(`${BASE_URL}/${id}/toggle`);
-  return response.data;
+  try {
+    const response = await axiosInstance.patch<Todo>(
+      `${BASE_URL}/${id}/toggle`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to toggling todo with id ${id}:`, error);
+    throw error;
+  }
 };
 
 // 할일 삭제
