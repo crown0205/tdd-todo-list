@@ -46,18 +46,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useMutateRemoveCompletedTodos', () => {
   test('완료된 할일들 삭제 성공', async () => {
-    (todoApi.findAllTodos as ReturnType<typeof vi.fn>).mockResolvedValue(
-      MOCK_TODO,
-    );
-
-    const { result: findAllTodosResult } = renderHook(() => useGetTodos(), {
-      wrapper,
-    });
-
-    await waitFor(() =>
-      expect(findAllTodosResult.current.isSuccess).toBe(true),
-    );
-    expect(findAllTodosResult.current.data).toEqual(MOCK_TODO);
+    queryClient.setQueryData(['todos'], MOCK_TODO);
 
     (
       todoApi.removeCompletedTodos as ReturnType<typeof vi.fn>
@@ -74,6 +63,7 @@ describe('useMutateRemoveCompletedTodos', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(RESULT_MOCK_TODO);
+    expect(todoApi.removeCompletedTodos).toHaveBeenCalled();
   });
 
   test('완료된 할일들 삭제 실패', async () => {

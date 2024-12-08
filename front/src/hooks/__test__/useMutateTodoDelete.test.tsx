@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import todoApi from '../../api/todos';
 import useMutateTodoDelete from '../queries/useMutateTodoDelete';
 
@@ -15,7 +15,6 @@ vi.mock('../../api/todos', () => ({
     removeTodo: vi.fn(),
   },
 }));
-
 const queryClient = new QueryClient();
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -25,6 +24,10 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 describe('useMutateTodoDelete', () => {
   beforeEach(() => {
     queryClient.setQueryData(['todos'], MOCK_TODOS);
+  });
+
+  afterEach(() => {
+    queryClient.clear();
   });
 
   test('할일 삭제 성공', async () => {
@@ -40,16 +43,9 @@ describe('useMutateTodoDelete', () => {
     });
 
     await waitFor(() => {
+      expect(todoApi.removeTodo).toHaveBeenCalledWith(todoId);
       expect(result.current.isSuccess).toBe(true);
-      queryClient.setQueryData(
-        ['todos'],
-        MOCK_TODOS.filter(todo => todo.id !== todoId),
-      );
     });
-
-    expect(queryClient.getQueryData(['todos'])).toEqual(
-      MOCK_TODOS.filter(todo => todo.id !== todoId),
-    );
   });
   test('할일 삭제 실패 시 에러 발생', async () => {
     const todoId = 1;
