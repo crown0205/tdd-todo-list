@@ -6,8 +6,8 @@ function useMutateTodoDelete() {
 
   return useMutation({
     mutationFn: todoApi.removeTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
 }
